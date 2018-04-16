@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
@@ -21,7 +22,6 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
-@RequestMapping(value = "/meals")
 public class JspMealController extends MealRestController {
 
     @Autowired
@@ -29,30 +29,28 @@ public class JspMealController extends MealRestController {
         super(service);
     }
 
-    @GetMapping("/delete")
-    public String delete(HttpServletRequest request) {
-        int id = getId(request);
+    @GetMapping("/meals/delete/{id}")
+    public String deleteMeal(@PathVariable("id") int id) {
         super.delete(id);
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/meals/create")
     public String create(Model model) {
         Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         model.addAttribute("meal", meal);
         return "/mealForm";
     }
 
-    @GetMapping("/update")
-    public String update(Model model, HttpServletRequest request) {
-        Meal meal = super.get(getId(request));
+    @GetMapping("/meals/update/{id}")
+    public String update(Model model, @PathVariable("id") int id) {
+        Meal meal = super.get(id);
         model.addAttribute("meal", meal);
         return "/mealForm";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/meals/add")
     public String add(HttpServletRequest request) {
-        int id = getId(request);
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -62,16 +60,16 @@ public class JspMealController extends MealRestController {
         } else {
             super.update(meal, getId(request));
         }
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
-    @GetMapping("meals")
+    @GetMapping("/meals")
     public String getAll(Model model) {
         model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
-    @PostMapping("/filter")
+    @PostMapping("/meals/filter")
     public String filter(Model model, HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
