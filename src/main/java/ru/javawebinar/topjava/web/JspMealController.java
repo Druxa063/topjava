@@ -64,12 +64,12 @@ public class JspMealController extends MealRestController {
     }
 
     @GetMapping("/meals")
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpServletRequest request) {
         model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
-    @PostMapping("/meals/filter")
+    @PostMapping("/meals")
     public String filter(Model model, HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));

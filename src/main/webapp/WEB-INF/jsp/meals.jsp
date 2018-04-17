@@ -8,8 +8,8 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h3>Meals</h3>
-    <c:url var="addAction" value="/meals/filter"/>
-    <form method="post" action=${addAction}>
+    <%--<c:url var="addAction" value="/meals/filter"/>--%>
+    <form method="post" action="/meals">
         <dl>
             <dt>From Date:</dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
@@ -29,7 +29,7 @@
         <button type="submit">Filter</button>
     </form>
     <hr/>
-    <a href="<c:url value="/meals/create"/>">Add Meal</a>
+    <a href="/meals/create">Add Meal</a>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
